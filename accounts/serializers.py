@@ -74,13 +74,13 @@ class LoginSerializer(serializers.ModelSerializer):
     
 
 class PasswordResetRequestSerializer(serializers.Serializer):
-    email =serializers.EmailField(max_lenght=255)
+    email =serializers.EmailField(max_length=255)
 
     class Meta:
         fields = ['email']
 
-    def validate(self, attr):
-        email = attr.get('email') 
+    def validate(self, attrs):
+        email = attrs.get('email') 
         if User.objects.filter(email=email).exists(): # check if user is in the database
             user = User.objects.get(email=email)
             uidb64 = urlsafe_base64_encode(smart_bytes(user.id))
@@ -91,7 +91,7 @@ class PasswordResetRequestSerializer(serializers.Serializer):
                 'uidb64':uidb64,
                 'token':token
             })
-            abslink = f'htttp://{site_domain}{relative_link}'
+            abslink = f'http://{site_domain}{relative_link}'
             email_body = f'Hi use the link below to reset your email \n {abslink}'
             data = {
                 'email_body':email_body,
@@ -99,7 +99,7 @@ class PasswordResetRequestSerializer(serializers.Serializer):
                 'to_email':user.email
             }
             send_normal_email(data)
-        return super.validate(attr)        
+        return super().validate(attrs)        
     
 class  SetNewPasswordSerializer(serializers.Serializer):
     password = serializers.CharField(max_length=100, min_length=6, write_only=True)
