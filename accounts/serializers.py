@@ -2,6 +2,11 @@ from rest_framework import serializers
 from .models import User
 from django.contrib.auth import authenticate
 from rest_framework.exceptions import AuthenticationFailed
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import smart_str, smart_bytes
+from django.contrib.sites.shortcuts import get_current_site
+from django.urls import reverse
 
 class UserRegisterSerializer(serializers.ModelSerializer):
 
@@ -65,3 +70,21 @@ class LoginSerializer(serializers.ModelSerializer):
             'refresh_token':str(user_tokens.get('refresh')),
 
         }    
+    
+
+class PasswordResetRequestSerializer(serializers.Serializer):
+    email =serializers.EmailField(max_lenght=255)
+
+    class Meta:
+        fields = ['email']
+
+    def validate(self, attr):
+        email = attr.get('email') 
+        if User.objects.filter(email=email).exists(): # check if user is in the database
+            user = User.objects.get(email=email)
+            uidb64 = urlsafe_base64_encode(smart_bytes(user.id))
+            token = PasswordResetTokenGenerator().make_token(user)
+            request = self.context.get('request')
+            site_domain = get_current_site(request).domain
+            relative_link = reverse('password-reset-confirm')
+        return super.validate(attr)        
