@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rest_framework.generics import GenericAPIView
-from .serializers import UserRegisterSerializer, LoginSerializer, PasswordResetRequestSerializer,  SetNewPasswordSerializer
+from .serializers import UserRegisterSerializer, LoginSerializer, PasswordResetRequestSerializer,  SetNewPasswordSerializer, LogoutUsererializer 
 
 from rest_framework.response import Response
 from rest_framework import status
@@ -123,6 +123,14 @@ class SetNewPassword(GenericAPIView):
             'message':'password reset successful'
         }, status=status.HTTP_200_OK)
     
-
+class LogoutUserView(GenericAPIView):
+    serializer_class = LogoutUsererializer    
+    permission_classes = [IsAuthenticated]
+    
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
