@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User
+from .models import User, Attendance
 from django.contrib.auth import authenticate
 from rest_framework.exceptions import AuthenticationFailed
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
@@ -149,3 +149,18 @@ class LogoutUsererializer(serializers.Serializer):
             token.blacklist()
         except TokenError:
             return self.fail('bad_token')         
+        
+
+class AttendanceSerializer(serializers.ModelSerializer):
+     class Meta:
+        model = Attendance
+        fields = [
+            'user',
+            'date',
+            'clock_in_time',
+            'clock_out_time',
+            'clock_in_location_latitude',
+            'clock_in_location_longitude',
+            'clock_out_location_latitude',
+            'clock_out_location_longitude',
+        ]

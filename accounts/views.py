@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rest_framework.generics import GenericAPIView
-from .serializers import UserRegisterSerializer, LoginSerializer, PasswordResetRequestSerializer,  SetNewPasswordSerializer, LogoutUsererializer 
+from .serializers import *
 
 from rest_framework.response import Response
 from rest_framework import status
@@ -11,6 +11,8 @@ from django.utils.http import urlsafe_base64_decode
 from django.utils.encoding import smart_str, DjangoUnicodeDecodeError
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from .models import User
+
+from django.utils import timezone
 
 
 # Create your views here.
@@ -134,3 +136,33 @@ class LogoutUserView(GenericAPIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+
+class AttendanceView(GenericAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        # Check if user is clocking in or out
+        action = request.data.get('action')  # 'clock_in' or 'clock_out'
+        attendance_data = {
+            'user': request.user.id,
+            'date': request.data.get('date'),  # Get date from request
+        }
+        
+        if action == 'clock_in':
+            attendance_data['clock_in_time'] = timezone.now()
+            attendance_data['clock_in_location_latitude'] = request.data.get('latitude')
+            attendance_data['clock_in_location_longitude'] = request.data.get('longitude')
+        elif action == 'clock_out':
+            attendance_data['clock_out_time'] = timezone.now()
+            attendance_data['clock_out_location_latitude'] = request.data.get('latitude')
+            attendance_data['clock_out_location_longitude'] = request.data.get('longitude')
+
+        # Logic to create or update attendance record
+        attendance, created = Attendance.objects.update_or_create(
+            user=request.user,
+            date=attendance_data['date'],
+            defaults=attendance_data
+        )
+        
+        serializer = AttendanceSerializer(attendance)
+        return Response(serializer.data, status=status.HTTP_200_OK if created else status.HTTP_202_ACCEPTED)
