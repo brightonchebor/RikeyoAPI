@@ -8,6 +8,9 @@ admin.site.register(OneTimePassword)
 class UserAdmin(admin.ModelAdmin):
     list_display = ['first_name', 'last_name', 'date_joined', 'last_login']
 
+# @admin.site.register(Attendance)
+# class Attendance(admin.ModelAdmin):
+#     list_display = []
 
 
     

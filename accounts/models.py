@@ -48,7 +48,7 @@ class OneTimePassword(models.Model):
 class Attendance(models.Model):
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    timestamp = models.DateTimeField(auto_now_add=True)
+    date = models.DateField()
     clock_in_time = models.DateTimeField(null=True, blank=True)  # Store clock-in time
     clock_out_time = models.DateTimeField(null=True, blank=True)  # Store clock-out time
     clock_in_location_latitude = models.FloatField(null=True, blank=True)  # Latitude for clock-in location

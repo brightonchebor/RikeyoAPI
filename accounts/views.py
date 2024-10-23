@@ -146,28 +146,40 @@ class AttendanceView(GenericAPIView):
 
         # # Check if user is clocking in or out
         action = request.data.get('action')  # 'clock_in' or 'clock_out'
-        attendance_data = {
-            'user': request.user.id,
-            'date': request.data.get('date'),  # Get date from request
-        }
         date = request.data.get('date')
         latitude = request.data.get('latitude')
         longitude = request.data.get('longitude')
+
+        attendance_data = {
+            'user': request.user.id,
+            'date': date
+        }
         
+        # Geofence parameters
+        geofence_center = (latitude, longitude)  
+        geofence_radius = 100  # in meters
+
 
         # Validate required fields
         if not date or latitude is None or longitude is None:
             return Response({"error": "Missing required fields."}, status=status.HTTP_400_BAD_REQUEST)
 
+        # Check if within geofence
+        distance = great_circle(geofence_center, (latitude, longitude)).meters
+        if distance > geofence_radius:
+            return Response({"error": "Location outside geofence."}, status=status.HTTP_403_FORBIDDEN)
+    
+
         
         if action == 'clock_in':
             attendance_data['clock_in_time'] = timezone.now()
-            attendance_data['clock_in_location_latitude'] = request.data.get('latitude')
-            attendance_data['clock_in_location_longitude'] = request.data.get('longitude')
+            attendance_data['clock_in_location_latitude'] = latitude
+            attendance_data['clock_in_location_longitude'] = longitude
+
         elif action == 'clock_out':
             attendance_data['clock_out_time'] = timezone.now()
-            attendance_data['clock_out_location_latitude'] = request.data.get('latitude')
-            attendance_data['clock_out_location_longitude'] = request.data.get('longitude')
+            attendance_data['clock_out_location_latitude'] = latitude
+            attendance_data['clock_out_location_longitude'] = longitude
 
         # Logic to create or update attendance record
         attendance, created = Attendance.objects.update_or_create(
