@@ -14,6 +14,8 @@ from .models import User
 
 from django.utils import timezone
 
+from geopy.distance import great_circle
+
 
 # Create your views here.
 class UserRegisterView(GenericAPIView):
@@ -143,16 +145,15 @@ class AttendanceView(GenericAPIView):
     def post(self, request):
 
         # # Check if user is clocking in or out
-        # action = request.data.get('action')  # 'clock_in' or 'clock_out'
+        action = request.data.get('action')  # 'clock_in' or 'clock_out'
         attendance_data = {
             'user': request.user.id,
             'date': request.data.get('date'),  # Get date from request
         }
-
-        action = request.data.get('action')  # 'clock_in' or 'clock_out'
         date = request.data.get('date')
         latitude = request.data.get('latitude')
         longitude = request.data.get('longitude')
+        
 
         # Validate required fields
         if not date or latitude is None or longitude is None:
