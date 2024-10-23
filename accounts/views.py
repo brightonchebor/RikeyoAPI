@@ -144,7 +144,7 @@ class AttendanceView(GenericAPIView):
 
     def post(self, request):
 
-        # # Check if user is clocking in or out
+        # Check if user is clocking in or out
         action = request.data.get('action')  # 'clock_in' or 'clock_out'
         date = request.data.get('date')
         latitude = request.data.get('latitude')
@@ -156,27 +156,46 @@ class AttendanceView(GenericAPIView):
         }
         
         # Geofence parameters
-        geofence_center = (latitude, longitude)  
+        office_lat = 14.67
+        office_long = 29.65
+        geofence_center = (office_lat, office_long)  
         geofence_radius = 100  # in meters
+
+        if not action:
+            return Response({"error": "Action must be provided ('clock_in' or 'clock_out')."}, status=status.HTTP_400_BAD_REQUEST)
 
 
         # Validate required fields
         if not date or latitude is None or longitude is None:
             return Response({"error": "Missing required fields."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Convert latitude and longitude to floats
+        try:
+            latitude = float(latitude)
+            longitude = float(longitude)
+        except ValueError:
+            return Response({"error": "Latitude and longitude must be valid numbers."}, status=status.HTTP_400_BAD_REQUEST)
 
         # Check if within geofence
         distance = great_circle(geofence_center, (latitude, longitude)).meters
         if distance > geofence_radius:
             return Response({"error": "Location outside geofence."}, status=status.HTTP_403_FORBIDDEN)
     
-
+        # Retrieve or create the attendance record
+        attendance, created = Attendance.objects.get_or_create(user=request.user, date=date)
         
         if action == 'clock_in':
+            if attendance.clock_in_time:
+                return Response({"error": "You have already clocked in for the day."}, status=status.HTTP_400_BAD_REQUEST)
             attendance_data['clock_in_time'] = timezone.now()
             attendance_data['clock_in_location_latitude'] = latitude
             attendance_data['clock_in_location_longitude'] = longitude
 
         elif action == 'clock_out':
+            if not attendance.clock_in_time:
+                return Response({"error": "You must clock in before clocking out."}, status=status.HTTP_400_BAD_REQUEST)
+            if attendance.clock_out_time:
+                return Response({"error": "You have already clocked out for the day."}, status=status.HTTP_400_BAD_REQUEST)
             attendance_data['clock_out_time'] = timezone.now()
             attendance_data['clock_out_location_latitude'] = latitude
             attendance_data['clock_out_location_longitude'] = longitude
@@ -187,6 +206,8 @@ class AttendanceView(GenericAPIView):
             date=attendance_data['date'],
             defaults=attendance_data
         )
+
+        
         
         serializer = AttendanceSerializer(attendance)
         return Response(serializer.data, status=status.HTTP_200_OK if created else status.HTTP_202_ACCEPTED)
