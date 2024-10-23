@@ -11,6 +11,6 @@ urlpatterns = [
     path('set-new-password/', SetNewPassword.as_view(), name='set-new-password'),
     path('logout/', LogoutUserView.as_view(), name='logout'),
 
-    path('attendance/', AttendanceView.as_view(), name='attendance')
+    path('attendance/', AttendanceView.as_view(), name='attendance'),
 ]
 
