@@ -200,12 +200,13 @@ class AttendanceView(GenericAPIView):
             attendance_data['clock_out_location_latitude'] = latitude
             attendance_data['clock_out_location_longitude'] = longitude
 
+        attendance.save()
         # Logic to create or update attendance record
-        attendance, created = Attendance.objects.update_or_create(
-            user=request.user,
-            date=attendance_data['date'],
-            defaults=attendance_data
-        )
+        # attendance, created = Attendance.objects.update_or_create(
+        #     user=request.user,
+        #     date=attendance_data['date'],
+        #     defaults=attendance_data
+        # )
 
         
         
