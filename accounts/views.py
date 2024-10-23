@@ -141,12 +141,23 @@ class AttendanceView(GenericAPIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        # Check if user is clocking in or out
-        action = request.data.get('action')  # 'clock_in' or 'clock_out'
+
+        # # Check if user is clocking in or out
+        # action = request.data.get('action')  # 'clock_in' or 'clock_out'
         attendance_data = {
             'user': request.user.id,
             'date': request.data.get('date'),  # Get date from request
         }
+
+        action = request.data.get('action')  # 'clock_in' or 'clock_out'
+        date = request.data.get('date')
+        latitude = request.data.get('latitude')
+        longitude = request.data.get('longitude')
+
+        # Validate required fields
+        if not date or latitude is None or longitude is None:
+            return Response({"error": "Missing required fields."}, status=status.HTTP_400_BAD_REQUEST)
+
         
         if action == 'clock_in':
             attendance_data['clock_in_time'] = timezone.now()
