@@ -8,9 +8,9 @@ from rest_framework_simplejwt.tokens import RefreshToken
 class User(AbstractBaseUser, PermissionsMixin):
 
     CHOICES = (
-        ('Manager', 'Manager'),
-        ('Teacher', 'Teacher'),
-        ('Admin', 'Admin')
+        ('manager', 'Manager'),
+        ('teacher', 'Teacher'),
+        ('admin', 'Admin')
     )
     email = models.EmailField(max_length=255, unique=True, verbose_name=_("Email Address"))
     first_name = models.CharField(max_length=100, verbose_name=_("First Name"))
@@ -21,7 +21,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     date_joined = models.DateTimeField(auto_now_add=True)
     last_login = models.DateTimeField(auto_now=True)
-    role = models.CharField(max_length=15 ,choices=CHOICES, default=CHOICES.Teacher)
+    role = models.CharField(max_length=15 ,choices=CHOICES, default='teacher')
 
     USERNAME_FIELD = "email"
 

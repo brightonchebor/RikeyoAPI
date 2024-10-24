@@ -24,6 +24,14 @@ class UserRegisterView(GenericAPIView):
    
     def post(self, request):
         user_data = request.data
+        role = user_data.get('role')
+
+        if role=='manager':
+            if User.objects.filter(role='Manager').exists():
+                return Response({
+                    'message':'Only one manager is allowed'
+                } ,status=status.HTTP_400_BAD_REQUEST)
+
         serializer = self.serializer_class(data=user_data)
 
         if serializer.is_valid(raise_exception=True):
