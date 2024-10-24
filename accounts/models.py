@@ -21,7 +21,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     date_joined = models.DateTimeField(auto_now_add=True)
     last_login = models.DateTimeField(auto_now=True)
-    role = models.CharField(max_length=15 ,choices=CHOICES)
+    role = models.CharField(max_length=15 ,choices=CHOICES, default=CHOICES.Teacher)
 
     USERNAME_FIELD = "email"
 
