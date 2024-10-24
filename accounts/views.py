@@ -27,7 +27,7 @@ class UserRegisterView(GenericAPIView):
         role = user_data.get('role')
 
         if role=='manager':
-            if User.objects.filter(role='Manager').exists():
+            if User.objects.filter(role='manager').exists():
                 return Response({
                     'message':'Only one manager is allowed'
                 } ,status=status.HTTP_400_BAD_REQUEST)
