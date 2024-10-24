@@ -57,7 +57,7 @@ class Attendance(models.Model):
     clock_out_location_longitude = models.FloatField(null=True, blank=True)  # Longitude for clock-out location
 
     def __str__(self):
-        return f'{self.user.first_name}, {self.user.last_name} - {self.timestamp}'
+        return f'{self.user.first_name}, {self.user.last_name} - {self.date}'
     
     class Meta:
         unique_together = ('user', 'date')
