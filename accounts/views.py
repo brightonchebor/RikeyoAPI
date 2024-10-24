@@ -228,11 +228,7 @@ class AttendanceView(GenericAPIView):
             attendance.clock_out_location_latitude = latitude
             attendance.clock_out_location_longitude = longitude
 
-      
-
         attendance.save()
-        
-        
-        
+             
         serializer = AttendanceSerializer(attendance)
         return Response(serializer.data, status=status.HTTP_200_OK if created else status.HTTP_202_ACCEPTED)
