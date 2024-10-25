@@ -232,3 +232,45 @@ class AttendanceView(GenericAPIView):
              
         serializer = AttendanceSerializer(attendance)
         return Response(serializer.data, status=status.HTTP_200_OK if created else status.HTTP_202_ACCEPTED)
+
+# For a user    
+# class AttendanceHistoryView(GenericAPIView):
+#     permission_classes = [IsAuthenticated]
+
+#     def get(self, request):
+        
+#         # Get all unique dates when attendance was marked
+#         attendance_dates = Attendance.objects.filter(user=request.user).values_list('date', flat=True).distinct()
+        
+#         # Fetch attendance details for each date
+#         report = []
+#         for date in attendance_dates:
+#             daily_attendance = Attendance.objects.filter(user=request.user, date=date)
+            
+#             # Calculate total hours worked for the day
+#             total_hours = 0
+#             daily_details = []
+            
+#             for record in daily_attendance:
+#                 if record.clock_in_time and record.clock_out_time:
+#                     hours_worked = (record.clock_out_time - record.clock_in_time).total_seconds() / 3600
+#                     total_hours += hours_worked
+#                 else:
+#                     hours_worked = 0
+                
+#                 # Append individual clock-in and clock-out details for the date
+#                 daily_details.append({
+#                     "clock_in_time": record.clock_in_time,
+#                     "clock_out_time": record.clock_out_time,
+#                     "hours_worked": hours_worked,
+#                 })
+
+#             report.append({
+#                 "date": date,
+#                 "total_hours_worked": total_hours,
+#                 "attendance_details": daily_details,
+#             })
+
+#         # Return attendance history
+#         return Response(report, status=status.HTTP_200_OK)
+        
