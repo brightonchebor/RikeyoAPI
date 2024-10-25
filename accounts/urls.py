@@ -11,9 +11,10 @@ urlpatterns = [
     path('set-new-password/', SetNewPassword.as_view(), name='set-new-password'),
     path('logout/', LogoutUserView.as_view(), name='logout'),
 
-    path('attendance/', AttendanceView.as_view(), name='attendance'),
+    path('attendance/', AttendanceView.as_view(), name='mark-attendance'),
 
     path('<str:role>/', UserListByRoleView.as_view(), name='all-users-list'),
-    path('<str:role>/<int:id>/', SingleUserView.as_view(), name='user-detail'),
+    path('<str:role>/<int:id>/', SingleUserView.as_view(), name='single-user-detail'),
+    path('attendance/history/', TeacherAttendanceHistoryView.as_view(), name='attendance-view')
 ]
 

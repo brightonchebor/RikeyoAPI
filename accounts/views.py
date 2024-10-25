@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_framework.generics import GenericAPIView, ListAPIView, RetrieveAPIView
+from rest_framework.generics import GenericAPIView, ListAPIView, RetrieveAPIView, DestroyAPIView
 from .serializers import *
 
 from rest_framework.response import Response
@@ -260,4 +260,24 @@ class SingleUserView(RetrieveAPIView):
         except User.DoesNotExist:
             raise NotFound(detail="User not found.")    
        
-       
+class TeacherAttendanceHistoryView(ListAPIView):
+    serializer_class = AllUSersSerializer
+    
+
+    def get_queryset(self):
+        # Check if the user is a manager or admin
+        if self.request.user.role in ['manager', 'admin']:
+            # Managers and admins can view all attendance records
+            return Attendance.objects.all().order_by('-date')
+        else:
+            # Teachers can view only their own attendance records
+            return Attendance.objects.filter(user=self.request.user).order_by('-date')       
+        
+class UserDeleteView(DestroyAPIView):
+    queryset = User.objects.all()
+    
+
+    def delete(self, request, *args, **kwargs):
+        return super().delete(request, *args, **kwargs)        
+
+        
