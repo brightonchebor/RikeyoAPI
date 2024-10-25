@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_framework.generics import GenericAPIView
+from rest_framework.generics import GenericAPIView, ListAPIView, RetrieveAPIView
 from .serializers import *
 
 from rest_framework.response import Response
@@ -11,6 +11,7 @@ from django.utils.http import urlsafe_base64_decode
 from django.utils.encoding import smart_str, DjangoUnicodeDecodeError
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from .models import User
+from rest_framework.exceptions import NotFound
 
 from django.utils import timezone
 
@@ -233,44 +234,33 @@ class AttendanceView(GenericAPIView):
         serializer = AttendanceSerializer(attendance)
         return Response(serializer.data, status=status.HTTP_200_OK if created else status.HTTP_202_ACCEPTED)
 
-# For a user    
-# class AttendanceHistoryView(GenericAPIView):
-#     permission_classes = [IsAuthenticated]
+class AllTeachers(ListAPIView):
+    serializer_class=AllUSersSerializer
 
-#     def get(self, request):
-        
-#         # Get all unique dates when attendance was marked
-#         attendance_dates = Attendance.objects.filter(user=request.user).values_list('date', flat=True).distinct()
-        
-#         # Fetch attendance details for each date
-#         report = []
-#         for date in attendance_dates:
-#             daily_attendance = Attendance.objects.filter(user=request.user, date=date)
-            
-#             # Calculate total hours worked for the day
-#             total_hours = 0
-#             daily_details = []
-            
-#             for record in daily_attendance:
-#                 if record.clock_in_time and record.clock_out_time:
-#                     hours_worked = (record.clock_out_time - record.clock_in_time).total_seconds() / 3600
-#                     total_hours += hours_worked
-#                 else:
-#                     hours_worked = 0
-                
-#                 # Append individual clock-in and clock-out details for the date
-#                 daily_details.append({
-#                     "clock_in_time": record.clock_in_time,
-#                     "clock_out_time": record.clock_out_time,
-#                     "hours_worked": hours_worked,
-#                 })
+    def get_queryset(self):
 
-#             report.append({
-#                 "date": date,
-#                 "total_hours_worked": total_hours,
-#                 "attendance_details": daily_details,
-#             })
+        return  User.objects.filter(role='teacher')
+    
+class AllManagers(ListAPIView):
+    serializer_class=AllUSersSerializer
 
-#         # Return attendance history
-#         return Response(report, status=status.HTTP_200_OK)
-        
+    def get_queryset(self):
+        return User.objects.filter(role='manager')
+    
+class UserDetailView(RetrieveAPIView):
+    serializer_class = AllUSersSerializer
+    
+
+    def get_queryset(self):
+        # Retrieve only users with a specific role
+        return User.objects.filter(role=self.kwargs['role'])
+
+    def get_object(self):
+        queryset = self.get_queryset()
+        user_id = self.kwargs['id']
+        try:
+            return queryset.get(id=user_id)
+        except User.DoesNotExist:
+            raise NotFound(detail="User not found.")    
+       
+       

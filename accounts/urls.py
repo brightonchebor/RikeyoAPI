@@ -12,5 +12,9 @@ urlpatterns = [
     path('logout/', LogoutUserView.as_view(), name='logout'),
 
     path('attendance/', AttendanceView.as_view(), name='attendance'),
+
+    path('teachers/', AllTeachers.as_view(), name='all-teachers'),
+    path('managers/', AllManagers.as_view(), name='all-managers'),
+    path('api/users/<str:role>/<int:id>/', SingleUserView.as_view(), name='user-detail'),
 ]
 
