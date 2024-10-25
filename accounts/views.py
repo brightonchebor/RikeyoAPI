@@ -234,20 +234,17 @@ class AttendanceView(GenericAPIView):
         serializer = AttendanceSerializer(attendance)
         return Response(serializer.data, status=status.HTTP_200_OK if created else status.HTTP_202_ACCEPTED)
 
-class AllTeachers(ListAPIView):
-    serializer_class=AllUSersSerializer
+class UserListByRoleView(ListAPIView):
+    serializer_class = AllUSersSerializer
+   
 
     def get_queryset(self):
-
-        return  User.objects.filter(role='teacher')
+        role = self.kwargs.get('role')
+        if role not in [choice[0] for choice in User.CHOICES]:
+            raise NotFound(detail="Role not found.")
+        return User.objects.filter(role=role)
     
-class AllManagers(ListAPIView):
-    serializer_class=AllUSersSerializer
-
-    def get_queryset(self):
-        return User.objects.filter(role='manager')
-    
-class UserDetailView(RetrieveAPIView):
+class SingleUserView(RetrieveAPIView):
     serializer_class = AllUSersSerializer
     
 
