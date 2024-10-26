@@ -205,10 +205,7 @@ class AttendanceView(GenericAPIView):
             if attendance.clock_in_time:
                 return Response({"error": "You have already clocked in for the day."}, status=status.HTTP_400_BAD_REQUEST)
             
-            # attendance_data['clock_in_time'] = timezone.now()
-            # attendance_data['clock_in_location_latitude'] = latitude
-            # attendance_data['clock_in_location_longitude'] = longitude
-
+      
             attendance.clock_in_time = timezone.now()
             attendance.clock_in_location_latitude = latitude
             attendance.clock_in_location_longitude = longitude
@@ -236,6 +233,7 @@ class AttendanceView(GenericAPIView):
 
 class UserListByRoleView(ListAPIView):
     serializer_class = AllUSersSerializer
+    permission_classes = [IsAuthenticated]
    
 
     def get_queryset(self):
@@ -246,6 +244,7 @@ class UserListByRoleView(ListAPIView):
     
 class SingleUserView(RetrieveAPIView):
     serializer_class = AllUSersSerializer
+    permission_classes = [IsAuthenticated]
     
 
     def get_queryset(self):
@@ -261,7 +260,8 @@ class SingleUserView(RetrieveAPIView):
             raise NotFound(detail="User not found.")    
        
 class TeacherAttendanceHistoryView(ListAPIView):
-    serializer_class = AllUSersSerializer
+    serializer_class = AttendanceSerializer
+    permission_classes = [IsAuthenticated]
     
 
     def get_queryset(self):
@@ -275,6 +275,7 @@ class TeacherAttendanceHistoryView(ListAPIView):
         
 class UserDeleteView(DestroyAPIView):
     queryset = User.objects.all()
+    permission_classes = [IsAuthenticated]
     
 
     def delete(self, request, *args, **kwargs):
