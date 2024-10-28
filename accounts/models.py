@@ -54,7 +54,7 @@ class OneTimePassword(models.Model):
 
 class Attendance(models.Model):
 
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     date = models.DateField()
     clock_in_time = models.DateTimeField(null=True, blank=True)  # Store clock-in time
     clock_out_time = models.DateTimeField(null=True, blank=True)  # Store clock-out time
