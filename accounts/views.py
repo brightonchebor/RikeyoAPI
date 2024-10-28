@@ -246,19 +246,26 @@ class SingleUserView(RetrieveAPIView):
         except User.DoesNotExist:
             raise NotFound(detail="User not found.")    
        
+
+
 class TeacherAttendanceHistoryView(ListAPIView):
     serializer_class = AttendanceSerializer
     permission_classes = [IsAuthenticated]
-    
 
     def get_queryset(self):
-        # Check if the user is a manager or admin
-        if self.request.user.role in ['manager', 'admin']:
-            # Managers and admins can view all attendance records
+        user = self.request.user
+        worker_id = self.request.query_params.get('worker_id', None)
+        
+        if user.role in ['manager', 'admin']:
+            # If worker_id is provided, fetch attendance records for that worker only
+            if worker_id:
+                return Attendance.objects.filter(user_id=worker_id).order_by('-date')
+            # Otherwise, return all attendance records
             return Attendance.objects.all().order_by('-date')
         else:
             # Teachers can view only their own attendance records
-            return Attendance.objects.filter(user=self.request.user).order_by('-date')       
+            return Attendance.objects.filter(user=user).order_by('-date')
+     
         
 class UserDeleteView(DestroyAPIView):
     queryset = User.objects.all()
