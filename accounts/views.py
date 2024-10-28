@@ -147,7 +147,6 @@ class LogoutUserView(GenericAPIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-
 class AttendanceView(GenericAPIView):
     permission_classes = [IsAuthenticated]
 
@@ -158,12 +157,10 @@ class AttendanceView(GenericAPIView):
         latitude = request.data.get('latitude')
         longitude = request.data.get('longitude')
         
-
         attendance_data = {
             'user': request.user.id,
             'action': action,
-            'date': date,
-            
+            'date': date,            
         }
         
         # Geofence parameters
@@ -196,9 +193,6 @@ class AttendanceView(GenericAPIView):
         attendance, created = Attendance.objects.get_or_create(
                         user=request.user,  
                         date=date,
-                        
-                       
-
                         )
         
         if action == 'clock_in':
@@ -210,17 +204,11 @@ class AttendanceView(GenericAPIView):
             attendance.clock_in_location_latitude = latitude
             attendance.clock_in_location_longitude = longitude
             
-
-
         elif action == 'clock_out':
             if not attendance.clock_in_time:
                 return Response({"error": "You must clock in before clocking out."}, status=status.HTTP_400_BAD_REQUEST)
             if attendance.clock_out_time:
                 return Response({"error": "You have already clocked out for the day."}, status=status.HTTP_400_BAD_REQUEST)
-            
-            # attendance_data['clock_out_time'] = timezone.now()
-            # attendance_data['clock_out_location_latitude'] = latitude
-            # attendance_data['clock_out_location_longitude'] = longitude
 
             attendance.clock_out_time = timezone.now()
             attendance.clock_out_location_latitude = latitude
@@ -235,7 +223,6 @@ class UserListByRoleView(ListAPIView):
     serializer_class = AllUSersSerializer
     permission_classes = [IsAuthenticated]
    
-
     def get_queryset(self):
         role = self.kwargs.get('role')
         if role not in [choice[0] for choice in User.CHOICES]:
