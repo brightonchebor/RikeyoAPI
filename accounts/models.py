@@ -5,6 +5,7 @@ from .managers import UserManager
 from rest_framework_simplejwt.tokens import RefreshToken
 
 
+AUTH_PROVIDERS = {'email':'email', 'google':'google', 'github':'github', 'facebook':'facebook'}
 class User(AbstractBaseUser, PermissionsMixin):
 
     CHOICES = (
@@ -22,6 +23,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(auto_now_add=True)
     last_login = models.DateTimeField(auto_now=True)
     role = models.CharField(max_length=15 ,choices=CHOICES, default='admin', db_index=True)
+    auth_provider = models.CharField(max_length=50, default=AUTH_PROVIDERS.get('email'))
 
     USERNAME_FIELD = "email"
 

@@ -168,3 +168,7 @@ SIMPLE_JWT = {
 # Debugging - print email credentials
 # print("EMAIL_HOST_USER:", env('EMAIL_HOST_USER', default="Not Found"))
 # print("EMAIL_HOST_PASSWORD:", env('EMAIL_HOST_PASSWORD', default="Not Found"))
+
+
+GOOGLE_CLIENT_ID = env('GOOGLE_CLIENT_ID')
+GOOGLE_CLIENT_SECRET = env('GOOGLE_CLIENT_SECRET')
