@@ -4,7 +4,7 @@ import environ
 from pathlib import Path
 
 from datetime import timedelta
-
+import dj_database_url
 
 
 env = environ.Env(
@@ -97,6 +97,8 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+DATABASES['default'] = dj_database_url.parse('postgresql://rikeyoapi_user:4Eg5rB7r141YlALdB0FGoUCjmLSt17I1@dpg-csh3ldrqf0us739trdo0-a.oregon-postgres.render.com/rikeyoapi')
 
 AUTH_USER_MODEL = 'accounts.User'
 
