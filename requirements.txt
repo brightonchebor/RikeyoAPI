@@ -17,6 +17,7 @@ django-environ==0.11.2
 django-rest-framework==0.1.0
 djangorestframework==3.15.2
 djangorestframework-simplejwt==5.3.1
+drf-yasg==1.21.8
 environ==1.0
 geographiclib==2.0
 geopy==2.4.1
@@ -27,10 +28,12 @@ google-auth-httplib2==0.2.0
 googleapis-common-protos==1.65.0
 httplib2==0.22.0
 idna==3.7
+inflection==0.5.1
 itypes==1.2.0
 Jinja2==3.1.4
 kombu==5.4.2
 MarkupSafe==3.0.2
+packaging==24.1
 prompt_toolkit==3.0.48
 proto-plus==1.25.0
 protobuf==5.28.3
@@ -39,6 +42,7 @@ pyasn1_modules==0.4.1
 PyJWT==2.9.0
 pyparsing==3.2.0
 python-dateutil==2.9.0.post0
+pytz==2024.2
 PyYAML==6.0.2
 requests==2.32.3
 rsa==4.9

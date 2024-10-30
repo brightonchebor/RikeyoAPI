@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'accounts',
     'social_accounts',
     'corsheaders',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [

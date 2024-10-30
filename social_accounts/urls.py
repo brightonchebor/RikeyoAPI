@@ -1,4 +1,4 @@
-from djnago.urls import path
+from django.urls import path
 from .views import GoogleSignInView
 
 urlpatterns = [
