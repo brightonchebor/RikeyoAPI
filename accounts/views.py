@@ -282,7 +282,7 @@ class UserDeleteView(DestroyAPIView):
     queryset = User.objects.all()
     permission_classes = [IsAuthenticated]
     
-
+    @swagger_auto_schema(operation_summray='Delete user.')
     def delete(self, request, *args, **kwargs):
         return super().delete(request, *args, **kwargs)        
 
