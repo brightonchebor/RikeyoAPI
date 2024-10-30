@@ -23,7 +23,7 @@ from drf_yasg.utils import swagger_auto_schema
 class UserRegisterView(GenericAPIView):
     serializer_class = UserRegisterSerializer
 
-    @swagger_auto_schema(operation_summary='Register a user')
+    @swagger_auto_schema(operation_summary='Register a user(Teacher/Manager/Admin).')
     def post(self, request):
         user_data = request.data
         role = user_data.get('role')
@@ -51,6 +51,7 @@ class UserRegisterView(GenericAPIView):
 
 class VerifyUserEmail(GenericAPIView):
 
+    @swagger_auto_schema(operation_summary='Verify user account with an OTP sent to the user email.')
     def post(self, request):
         otpcode = request.data.get('otp')
         try:
@@ -74,6 +75,7 @@ class VerifyUserEmail(GenericAPIView):
 class LoginUserView( GenericAPIView):
     serializer_class = LoginSerializer
 
+    @swagger_auto_schema(operation_summary='Login user to get generate JWT token.')
     def post(self, request):
         serializer = self.serializer_class(
             data=request.data,
@@ -90,6 +92,7 @@ class LoginUserView( GenericAPIView):
 class TestAunthenticationView(GenericAPIView):
     permission_classes = [IsAuthenticated]
 
+    @swagger_auto_schema(operation_summary='Test if the JWT token is valid.')
     def get(self, request):
         data={
             'msg':'it works'
@@ -99,6 +102,7 @@ class TestAunthenticationView(GenericAPIView):
 class PasswordResetRequestView(GenericAPIView):
     serializer_class = PasswordResetRequestSerializer
 
+    @swagger_auto_schema(operation_summary='Request for a password reset.')
     def post(self, request):
         serializer = self.serializer_class(data=request.data, context={'request':request})    
         serializer.is_valid(raise_exception=True)
@@ -108,6 +112,7 @@ class PasswordResetRequestView(GenericAPIView):
 
 class PasswordResetConfirm(GenericAPIView):
     
+    @swagger_auto_schema(operation_summary='Confirming password reset.')
     def get(self, request, uidb64, token):
         try:
             user_id = smart_str(urlsafe_base64_decode(uidb64))
@@ -130,6 +135,7 @@ class PasswordResetConfirm(GenericAPIView):
 class SetNewPassword(GenericAPIView):
     serializer_class = SetNewPasswordSerializer
 
+    @swagger_auto_schema(operation_summary='Set new password.')
     def patch(self, request): # we are updatinng the pwd
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -141,6 +147,7 @@ class LogoutUserView(GenericAPIView):
     serializer_class = LogoutUsererializer    
     permission_classes = [IsAuthenticated]
     
+    @swagger_auto_schema(operation_summary='Log out a user.')
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -151,6 +158,7 @@ class LogoutUserView(GenericAPIView):
 class AttendanceView(GenericAPIView):
     permission_classes = [IsAuthenticated]
 
+    @swagger_auto_schema(operation_summary='Mark attendance.')
     def post(self, request):
 
         action = request.data.get('action')  # 'clock_in' or 'clock_out'
@@ -224,6 +232,7 @@ class UserListByRoleView(ListAPIView):
     serializer_class = AllUSersSerializer
     permission_classes = [IsAuthenticated]
    
+    @swagger_auto_schema(operation_summary='List all Teachers/Managers/Admins.')
     def get_queryset(self):
         role = self.kwargs.get('role')
         if role not in [choice[0] for choice in User.CHOICES]:
@@ -234,7 +243,7 @@ class SingleUserView(RetrieveAPIView):
     serializer_class = AllUSersSerializer
     permission_classes = [IsAuthenticated]
     
-
+    @swagger_auto_schema(operation_summary='List a single Teacher/Manager/Admin.')
     def get_queryset(self):
         # Retrieve only users with a specific role
         return User.objects.filter(role=self.kwargs['role'])
@@ -253,6 +262,7 @@ class TeacherAttendanceHistoryView(ListAPIView):
     serializer_class = AttendanceSerializer
     permission_classes = [IsAuthenticated]
 
+    @swagger_auto_schema(operation_summary='Teacher to view their own attendance history, Manager/Admin to view teacher history by passing their ID')
     def get_queryset(self):
         user = self.request.user
         worker_id = self.request.query_params.get('worker_id', None)
