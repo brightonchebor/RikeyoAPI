@@ -5,7 +5,7 @@ from rest_framework.exceptions import AuthenticationFailed
 
 class GoogleSignInSerializer(serializers.Serializer):
 
-    access_token =- serializers.CharField(min_length=6)
+    access_token = serializers.CharField(min_length=6)
 
     def validate_access_token(self, access_token):
 

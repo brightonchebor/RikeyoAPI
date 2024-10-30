@@ -1,9 +1,9 @@
 from google.auth.transport import requests
 from google.oauth2 import id_token
 from accounts.models import User
-from django.contriv.auth import authenticate
+from django.contrib.auth import authenticate
 from django.conf import settings
-from rest_framework.execeptions import AuthenticationFailed
+from rest_framework.exceptions import AuthenticationFailed
 
 class Google():
     
