@@ -158,7 +158,7 @@ class LogoutUserView(GenericAPIView):
 class AttendanceView(GenericAPIView):
     permission_classes = [IsAuthenticated]
 
-    @swagger_auto_schema(operation_summary='Mark attendance.')
+    # @swagger_auto_schema(operation_summary='Mark attendance.')
     def post(self, request):
 
         action = request.data.get('action')  # 'clock_in' or 'clock_out'
