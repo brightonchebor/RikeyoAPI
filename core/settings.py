@@ -31,7 +31,7 @@ DEBUG = env('DEBUG')
 # DEBUG = False
 
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = env('ALLOWED_HOSTS').split(',')
 
 
 # Application definition
@@ -98,7 +98,7 @@ DATABASES = {
     }
 }
 
-DATABASES['default'] = dj_database_url.parse('postgresql://rikeyoapi_user:4Eg5rB7r141YlALdB0FGoUCjmLSt17I1@dpg-csh3ldrqf0us739trdo0-a.oregon-postgres.render.com/rikeyoapi')
+DATABASES['default'] = dj_database_url.parse(env('DATABASE_URL'))
 
 AUTH_USER_MODEL = 'accounts.User'
 
