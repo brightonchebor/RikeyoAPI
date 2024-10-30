@@ -13,16 +13,17 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from .models import User
 from rest_framework.exceptions import NotFound
 
-from django.utils import timezone
 
+from django.utils import timezone
 from geopy.distance import great_circle
+from drf_yasg.utils import swagger_auto_schema
 
 
 # Create your views here.
 class UserRegisterView(GenericAPIView):
     serializer_class = UserRegisterSerializer
 
-   
+    @swagger_auto_schema(operation_summary='Register a user')
     def post(self, request):
         user_data = request.data
         role = user_data.get('role')
