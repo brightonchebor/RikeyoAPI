@@ -5,18 +5,18 @@ from .serializers import *
 from rest_framework.response import Response
 from rest_framework import status
 from .utils import send_code_to_user
-from .models import OneTimePassword
 from rest_framework.permissions import IsAuthenticated
 from django.utils.http import urlsafe_base64_decode
 from django.utils.encoding import smart_str, DjangoUnicodeDecodeError
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
-from .models import User
+from .models import User, OneTimePassword
 from rest_framework.exceptions import NotFound
 
 
 from django.utils import timezone
 from geopy.distance import great_circle
 from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 
 
 # Create your views here.
@@ -51,7 +51,23 @@ class UserRegisterView(GenericAPIView):
 
 class VerifyUserEmail(GenericAPIView):
 
-    @swagger_auto_schema(operation_summary='Verify user account with an OTP sent to the user email.')
+    @swagger_auto_schema(operation_summary='Confirming password reset.',request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'otp': openapi.Schema(type=openapi.TYPE_STRING, description='One-Time Password (OTP) sent to user email'),
+            },
+            required=['otp'],  # Marking 'otp' as a required field
+        ),responses={
+            200: openapi.Response(
+                description='Email verified successfully',
+                schema=openapi.Schema(
+                    type=openapi.TYPE_OBJECT,
+                    properties={
+                        'message': openapi.Schema(type=openapi.TYPE_STRING, description='Success message')
+                    }
+                )
+            )}    
+        )
     def post(self, request):
         otpcode = request.data.get('otp')
         try:
@@ -112,7 +128,7 @@ class PasswordResetRequestView(GenericAPIView):
 
 class PasswordResetConfirm(GenericAPIView):
     
-    @swagger_auto_schema(operation_summary='Confirming password reset.')
+    
     def get(self, request, uidb64, token):
         try:
             user_id = smart_str(urlsafe_base64_decode(uidb64))
@@ -157,6 +173,7 @@ class LogoutUserView(GenericAPIView):
 
 class AttendanceView(GenericAPIView):
     permission_classes = [IsAuthenticated]
+    serializer_class = AttendanceSerializer
 
     # @swagger_auto_schema(operation_summary='Mark attendance.')
     def post(self, request):
