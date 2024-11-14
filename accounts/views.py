@@ -175,7 +175,47 @@ class AttendanceView(GenericAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = AttendanceSerializer
 
-    # @swagger_auto_schema(operation_summary='Mark attendance.')
+    @swagger_auto_schema(
+        operation_summary='Mark attendance (clock in or clock out)',
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'action': openapi.Schema(
+                    type=openapi.TYPE_STRING,
+                    description="'clock_in' or 'clock_out'"
+                ),
+                'date': openapi.Schema(
+                    type=openapi.TYPE_STRING,
+                    format=openapi.FORMAT_DATE,
+                    description="Date in YYYY-MM-DD format"
+                ),
+                'latitude': openapi.Schema(
+                    type=openapi.TYPE_NUMBER,
+                    description="Latitude"
+                ),
+                'longitude': openapi.Schema(
+                    type=openapi.TYPE_NUMBER,
+                    description="Longitude"
+                ),
+            },
+            required=['action', 'date', 'latitude', 'longitude']  # Specifying required fields
+        ),
+        responses={
+            200: openapi.Response(
+                description="Attendance marked successfully",
+                schema=AttendanceSerializer  # Response schema with existing serializer
+            ),
+            403: openapi.Response(
+                description="Geofence restriction",
+                schema=openapi.Schema(
+                    type=openapi.TYPE_OBJECT,
+                    properties={
+                        'error': openapi.Schema(type=openapi.TYPE_STRING, description='Error message')
+                    }
+                )
+            )
+        }
+    )
     def post(self, request):
 
         action = request.data.get('action')  # 'clock_in' or 'clock_out'

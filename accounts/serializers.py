@@ -166,6 +166,17 @@ class AttendanceSerializer(serializers.ModelSerializer):
             'clock_out_location_longitude',
         ]
 
+class AttendanceRequestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Attendance
+        fields = [
+            'action',
+            'date',
+            'latitude',
+            'longitude',
+        ]
+
+
 class AllUSersSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
