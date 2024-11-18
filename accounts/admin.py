@@ -10,5 +10,6 @@ class UserAdmin(admin.ModelAdmin):
 
 admin.site.register(Attendance)
 
+admin.site.register(Geofence)
 
     
