@@ -70,3 +70,12 @@ class Attendance(models.Model):
     
     class Meta:
         unique_together = ('user', 'date')
+
+class Geofence(models.Model):
+
+    office_lat = models.IntegerField()
+    office_long = models.IntegerField()
+    geofence_radius = models.IntegerField()
+
+    def __str__(self):
+        return f'{self.office_lat} and {self.office_long}'
