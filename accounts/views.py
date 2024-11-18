@@ -9,7 +9,7 @@ from rest_framework.permissions import IsAuthenticated
 from django.utils.http import urlsafe_base64_decode
 from django.utils.encoding import smart_str, DjangoUnicodeDecodeError
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
-from .models import User, OneTimePassword
+from .models import User, OneTimePassword, Geofence
 from rest_framework.exceptions import NotFound
 
 
@@ -230,7 +230,7 @@ class AttendanceView(GenericAPIView):
         }
         
         # Geofence parameters
-        office_lat = 14.67
+        office_lat = Geofence.office_lat
         office_long = 29.65
         geofence_center = (office_lat, office_long)  
         geofence_radius = 100  # in meters
