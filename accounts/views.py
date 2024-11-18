@@ -230,11 +230,14 @@ class AttendanceView(GenericAPIView):
         }
         
         # Geofence parameters
-        office_lat = Geofence.office_lat
-        office_long = 29.65
+        geofences = Geofence.objects.all()
+        for geofence in geofences:
+            office_lat = geofence.office_lat
+            office_long = geofence.office_long
+            geofence_radius = geofence.geofence_radius  # in meters
+        
         geofence_center = (office_lat, office_long)  
-        geofence_radius = 100  # in meters
-
+        
         if not action:
             return Response({"error": "Action must be provided ('clock_in' or 'clock_out')."}, status=status.HTTP_400_BAD_REQUEST)
 
