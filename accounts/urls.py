@@ -17,6 +17,7 @@ urlpatterns = [
     path('attendance/history/', TeacherAttendanceHistoryView.as_view(), name='attendance-view'),
     path('attendance/history/?worker_id=<worker_id>/', TeacherAttendanceHistoryView.as_view(), name='attendance-view'),
     path('delete/<str:role>/<int:id>/', UserDeleteView.as_view(), name='delete user'),
+    
 
     path('geofence/', GeofenceView.as_view(), name='geofence-data'),
     
