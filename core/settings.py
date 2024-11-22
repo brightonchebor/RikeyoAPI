@@ -32,9 +32,9 @@ DEBUG = env('DEBUG')
 # DEBUG = False
 
 
-ALLOWED_HOSTS = env('ALLOWED_HOSTS').split(',')
+# ALLOWED_HOSTS = env('ALLOWED_HOSTS').split(',')
 
-# ALLOWED_HOST = ['*']
+ALLOWED_HOST = ['*']
 
 # Application definition
 
