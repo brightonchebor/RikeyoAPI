@@ -12,12 +12,14 @@ urlpatterns = [
     path('logout/', LogoutUserView.as_view(), name='logout'),
 
     path('attendance/', AttendanceView.as_view(), name='mark-attendance'),
-
+    path('geofence/', GeofenceView.as_view, name='geofence-data'),
     path('<str:role>s/', UserListByRoleView.as_view(), name='all-users-list'),
     path('<str:role>/<int:id>/', SingleUserView.as_view(), name='single-user-detail'),
     path('attendance/history/', TeacherAttendanceHistoryView.as_view(), name='attendance-view'),
     path('attendance/history/?worker_id=<worker_id>/', TeacherAttendanceHistoryView.as_view(), name='attendance-view'),
     path('delete/<str:role>/<int:id>/', UserDeleteView.as_view(), name='delete user'),
+
+    
     
 ]
 

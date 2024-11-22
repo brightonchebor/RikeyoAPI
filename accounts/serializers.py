@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, Attendance
+from .models import User, Attendance, Geofence
 from django.contrib.auth import authenticate
 from rest_framework.exceptions import AuthenticationFailed
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
@@ -183,4 +183,7 @@ class AllUSersSerializer(serializers.ModelSerializer):
         fields = ['id', 'first_name', 'last_name',  'role']
           
 
-
+class GeofenceSerializer(serializers.ModelSerializer):
+    class Meta:
+        mdoel = Geofence
+        fiels = ['office_lat', 'office_long', 'geofence_radius']

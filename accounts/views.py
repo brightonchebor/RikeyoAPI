@@ -346,4 +346,17 @@ class UserDeleteView(DestroyAPIView):
     def delete(self, request, *args, **kwargs):
         return super().delete(request, *args, **kwargs)        
 
+
+class GeofenceView(ListAPIView):
+    queryset = Geofence.objects.all()
+    serializer_class = GeofenceSerializer
+
+    # @swagger_auto_schema(
+    #     operation_summary="Retrieve Geofence Data",
+    #     operation_description="Fetches a list of geofences including latitude, longitude, and radius.",
+    #     responses={200: GeofenceSerializer(many=True)},
+    # )
+    # def get(self, request, *args, **kwargs):
+    #     """Custom description for the GET request."""
+    #     return super().get(request, *args, **kwargs)
         
