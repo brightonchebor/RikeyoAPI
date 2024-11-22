@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from rest_framework.generics import GenericAPIView, ListAPIView, RetrieveAPIView, DestroyAPIView
+from rest_framework.views import APIView
+
 from .serializers import *
 
 from rest_framework.response import Response
@@ -347,16 +349,19 @@ class UserDeleteView(DestroyAPIView):
         return super().delete(request, *args, **kwargs)        
 
 
-class GeofenceView(ListAPIView):
-    queryset = Geofence.objects.all()
-    serializer_class = GeofenceSerializer
+class GeofenceView(APIView):
 
-    # @swagger_auto_schema(
-    #     operation_summary="Retrieve Geofence Data",
-    #     operation_description="Fetches a list of geofences including latitude, longitude, and radius.",
-    #     responses={200: GeofenceSerializer(many=True)},
-    # )
-    # def get(self, request, *args, **kwargs):
-    #     """Custom description for the GET request."""
-    #     return super().get(request, *args, **kwargs)
+    @swagger_auto_schema(
+        operation_description="Get a list of all geofences",
+        responses={
+            200: GeofenceSerializer(many=True),
+            500: 'Internal Server Error',
+        },
+    )
+    def get(self, request):
+        geofences = Geofence.objects.all()
+        serializer = GeofenceSerializer(geofences, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    
         

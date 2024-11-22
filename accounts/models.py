@@ -73,8 +73,8 @@ class Attendance(models.Model):
 
 class Geofence(models.Model):
 
-    office_lat = models.IntegerField()
-    office_long = models.IntegerField()
+    office_lat = models.FloatField()
+    office_long = models.FloatField()
     geofence_radius = models.IntegerField()
 
     def __str__(self):

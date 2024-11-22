@@ -185,5 +185,5 @@ class AllUSersSerializer(serializers.ModelSerializer):
 
 class GeofenceSerializer(serializers.ModelSerializer):
     class Meta:
-        mdoel = Geofence
-        fiels = ['office_lat', 'office_long', 'geofence_radius']
+        model = Geofence
+        fields = ['office_lat', 'office_long', 'geofence_radius']
