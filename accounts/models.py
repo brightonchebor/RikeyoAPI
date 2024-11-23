@@ -75,7 +75,7 @@ class Geofence(models.Model):
 
     office_lat = models.FloatField()
     office_long = models.FloatField()
-    geofence_radius = models.IntegerField()
+    geofence_radius = models.FloatField()
 
     def __str__(self):
         return f'latitude:{self.office_lat}, longitude:{self.office_long}, radius:{self.geofence_radius}'
