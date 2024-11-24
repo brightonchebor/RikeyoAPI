@@ -168,7 +168,6 @@ if not DEBUG:
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Looking to send emails in production? Check out our Email API/SMTP product!
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # EMAIL_HOST = 'sandbox.smtp.mailtrap.io'
 # EMAIL_HOST_USER=env('EMAIL_HOST_USER')
@@ -196,20 +195,13 @@ SIMPLE_JWT = {
     }
 
 
-# Debugging - print email credentials
-# print("EMAIL_HOST_USER:", env('EMAIL_HOST_USER', default="Not Found"))
-# print("EMAIL_HOST_PASSWORD:", env('EMAIL_HOST_PASSWORD', default="Not Found"))
-
-
 GOOGLE_CLIENT_ID = env('GOOGLE_CLIENT_ID')
 GOOGLE_CLIENT_SECRET = env('GOOGLE_CLIENT_SECRET')
 SOCIAL_AUTH_PASSWORD = env('SOCIAL_AUTH_PASSWORD')
 
 SWAGGER_SETTINGS = {
    'SECURITY_DEFINITIONS': {
-    #   'Basic': {
-    #         'type': 'basic'
-    #   },
+   
       'Bearer': {
             'type': 'apiKey',
             'name': 'Authorization',
@@ -223,3 +215,43 @@ SWAGGER_SETTINGS = {
 # ]
 
 CORS_ALLOW_ALL_ORIGINS = True
+
+JAZZMIN_SETTINGS = {
+    "site_title": "Attendance System",
+    "topmenu_links": [
+        {"app": "accounts"},
+    ],
+    "show_ui_builder": False,
+
+}
+JAZZMIN_UI_TWEAKS = {
+    "navbar_small_text": False,
+    "footer_small_text": False,
+    "body_small_text": True,
+    "brand_small_text": False,
+    "brand_colour": False,
+    "accent": "accent-primary",
+    "navbar": "navbar-white navbar-light",
+    "no_navbar_border": False,
+    "navbar_fixed": False,
+    "layout_boxed": False,
+    "footer_fixed": False,
+    "sidebar_fixed": False,
+    "sidebar": "sidebar-dark-primary",
+    "sidebar_nav_small_text": False,
+    "sidebar_disable_expand": False,
+    "sidebar_nav_child_indent": False,
+    "sidebar_nav_compact_style": True,
+    "sidebar_nav_legacy_style": True,
+    "sidebar_nav_flat_style": True,
+    "theme": "yeti",
+    "dark_mode_theme": None,
+    "button_classes": {
+        "primary": "btn-outline-primary",
+        "secondary": "btn-outline-secondary",
+        "info": "btn-info",
+        "warning": "btn-warning",
+        "danger": "btn-danger",
+        "success": "btn-success"
+    }
+}
